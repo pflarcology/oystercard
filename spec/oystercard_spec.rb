@@ -11,8 +11,6 @@ describe Oystercard do
     end
   end
 
-  it { is_expected.to respond_to(:top_up).with(1).argument }
-
   describe '#top_up' do
 
     it 'should increase the balance by the amount entered' do
@@ -25,8 +23,17 @@ describe Oystercard do
       expect{ subject.top_up 1 }.to raise_error error
     end
 
-
   end
 
+  describe '#deduct' do
+
+  it { is_expected.to respond_to(:deduct).with(1).argument }
+
+    it 'should reduce the balance by the amount entered' do
+      subject.top_up 1
+      expect{ subject.deduct 1 }.to change{ subject.balance }.by -1
+    end
+
+  end
 
 end
