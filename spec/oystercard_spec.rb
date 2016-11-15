@@ -6,9 +6,22 @@ describe Oystercard do
 
   describe '#initialization' do
 
-    it 'starts wihth a balance of 0' do
+    it 'starts with a balance of 0' do
       expect(subject.balance).to eq 0
     end
+
+    it 'starts off not on a journey' do
+      expect(subject.in_journey?).to eq false  
+    end
+
+  end
+
+
+
+  describe '#in_journey?' do
+
+    it { is_expected.to respond_to :in_journey? }
+
   end
 
   describe '#top_up' do
@@ -27,13 +40,13 @@ describe Oystercard do
 
   describe '#deduct' do
 
-  it { is_expected.to respond_to(:deduct).with(1).argument }
-
     it 'should reduce the balance by the amount entered' do
       subject.top_up 1
       expect{ subject.deduct 1 }.to change{ subject.balance }.by -1
     end
 
   end
+
+
 
 end

@@ -8,6 +8,10 @@ class Oystercard
     @balance = 0
   end
 
+  def in_journey?
+    false
+  end
+
   def top_up(amount)
     fail "Top up amount takes balance above £#{LIMIT} limit" if balance + amount > LIMIT
     @balance += amount
