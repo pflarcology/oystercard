@@ -49,13 +49,20 @@ describe Oystercard do
 
   end
 
+  describe '#touch_in' do
+    it 'should raise an error when the balance is below the minimun amount' do
+      error = "Cannot touch in: less than £#{described_class::MINIMUM_FARE} on card"
+      expect{ subject.touch_in }.to raise_error error
+    end
+  end
+
   describe '#top_up' do
 
     it 'should increase the balance by the amount entered' do
       expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
     end
 
-    it "raises an error if top up amount takes balanace above 90" do
+    it "raises an error if top up amount takes balanace above limit" do
       subject.top_up described_class::LIMIT
       error = "Top up amount takes balance above £#{described_class::LIMIT} limit"
       expect{ subject.top_up 1 }.to raise_error error
