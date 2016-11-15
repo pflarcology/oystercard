@@ -12,7 +12,7 @@ describe Oystercard do
     end
 
     it 'starts off not on a journey' do
-      expect(subject.in_journey).to eq false
+      expect(subject.in_journey?).to eq false
     end
 
   end
@@ -66,24 +66,30 @@ describe Oystercard do
 
       it 'should make the card in use' do
         subject.touch_in(station)
-        expect(subject.in_journey).to eq true
+        expect(subject.in_journey?).to eq true
       end
 
     end
 
     describe '#touch_out' do
 
-      it 'should make the card not in use' do
+      before do
         subject.touch_in(station)
+      end
+
+      it 'should make the card not in use' do
         subject.touch_out
-        expect(subject.in_journey).to eq false
+        expect(subject.in_journey?).to eq false
       end
 
       it 'deducts the minimum fare from the card' do
-        subject.touch_in(station)
         expect{ subject.touch_out }.to change {subject.balance }.by -1
       end
 
+      it 'sets the entry station to nil' do
+        subject.touch_out
+        expect(subject.entry_station).to eq nil
+      end
 
 
     end
