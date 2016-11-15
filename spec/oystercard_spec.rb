@@ -3,7 +3,8 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:oystercard) { described_class.new }
-  let(:station) { double :station }
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
 
   describe '#initialization' do
 
@@ -19,7 +20,7 @@ describe Oystercard do
 
   describe '#in_journey' do
 
-    it { is_expected.to respond_to :in_journey }
+    it { is_expected.to respond_to :in_journey? }
 
   end
 
@@ -29,11 +30,23 @@ describe Oystercard do
 
   end
 
+  describe '#exit_station' do
+
+    it { is_expected.to respond_to :exit_station }
+
+  end
+
+  describe '#journeys' do
+
+    it { is_expected.to respond_to :journeys }
+
+  end
+
 
   describe '#touch_in' do
     it 'should raise an error when the balance is below the minimun amount' do
       error = "Cannot touch in: less than £#{described_class::MINIMUM_FARE} on card"
-      expect{ subject.touch_in(station) }.to raise_error error
+      expect{ subject.touch_in(entry_station) }.to raise_error error
     end
   end
 
@@ -55,40 +68,47 @@ describe Oystercard do
 
     before do
       subject.top_up(described_class::LIMIT)
+      subject.touch_in(entry_station)
     end
 
     describe '#touch_in' do
 
       it 'stores the entry station' do
-        subject.touch_in(station)
-        expect(subject.entry_station).to eq station
+        expect(subject.entry_station).to eq entry_station
       end
 
       it 'should make the card in use' do
-        subject.touch_in(station)
         expect(subject.in_journey?).to eq true
+      end
+
+      it 'should make exit station equal nil' do
+        subject.touch_out(exit_station)
+        subject.touch_in(entry_station)
+        expect(subject.exit_station).to eq nil
       end
 
     end
 
     describe '#touch_out' do
 
-      before do
-        subject.touch_in(station)
-      end
 
       it 'should make the card not in use' do
-        subject.touch_out
+        subject.touch_out(exit_station)
         expect(subject.in_journey?).to eq false
       end
 
       it 'deducts the minimum fare from the card' do
-        expect{ subject.touch_out }.to change {subject.balance }.by -1
+        expect{ subject.touch_out(exit_station) }.to change {subject.balance }.by -1
       end
 
       it 'sets the entry station to nil' do
-        subject.touch_out
+        subject.touch_out(exit_station)
         expect(subject.entry_station).to eq nil
+      end
+
+      it 'stores the exit station' do
+        subject.touch_out(exit_station)
+        expect(subject.exit_station).to eq exit_station
       end
 
 
