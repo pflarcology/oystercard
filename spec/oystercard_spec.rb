@@ -22,6 +22,15 @@ describe Oystercard do
 
   end
 
+  describe '#touch_in' do
+
+    it 'should make the card in use' do
+      subject.touch_in
+      expect(subject.in_journey).to eq true
+    end
+
+  end
+
   describe '#top_up' do
 
     it 'should increase the balance by the amount entered' do
