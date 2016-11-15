@@ -23,7 +23,7 @@ describe Oystercard do
     it { is_expected.to respond_to :in_journey }
 
   end
-
+# missing test
   describe '#touch_in' do
 
     it 'should make the card in use' do
