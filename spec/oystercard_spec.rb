@@ -22,11 +22,29 @@ describe Oystercard do
 
   end
 
-  describe '#touch_in' do
+  describe 'methods which require the card to be topped up' do
 
-    it 'should make the card in use' do
-      subject.touch_in
-      expect(subject.in_journey).to eq true
+    before do
+      subject.top_up(described_class::LIMIT)
+    end
+
+    describe '#touch_in' do
+
+      it 'should make the card in use' do
+        subject.touch_in
+        expect(subject.in_journey).to eq true
+      end
+
+    end
+
+    describe '#touch_out' do
+
+      it 'should make the card not in use' do
+        subject.touch_in
+        subject.touch_out
+        expect(subject.in_journey).to eq false
+      end
+
     end
 
   end
