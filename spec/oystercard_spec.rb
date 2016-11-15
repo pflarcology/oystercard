@@ -22,32 +22,6 @@ describe Oystercard do
 
   end
 
-  describe 'methods which require the card to be topped up' do
-
-    before do
-      subject.top_up(described_class::LIMIT)
-    end
-
-    describe '#touch_in' do
-
-      it 'should make the card in use' do
-        subject.touch_in
-        expect(subject.in_journey).to eq true
-      end
-
-    end
-
-    describe '#touch_out' do
-
-      it 'should make the card not in use' do
-        subject.touch_in
-        subject.touch_out
-        expect(subject.in_journey).to eq false
-      end
-
-    end
-
-  end
 
   describe '#touch_in' do
     it 'should raise an error when the balance is below the minimun amount' do
@@ -70,15 +44,38 @@ describe Oystercard do
 
   end
 
-  describe '#deduct' do
+  context 'card is topped up' do
 
-    it 'should reduce the balance by the amount entered' do
-      subject.top_up 1
-      expect{ subject.deduct 1 }.to change{ subject.balance }.by -1
+    before do
+      subject.top_up(described_class::LIMIT)
+    end
+
+    describe '#touch_in' do
+
+      it 'should make the card in use' do
+        subject.touch_in
+        expect(subject.in_journey).to eq true
+      end
+
+    end
+
+    describe '#touch_out' do
+
+      it 'should make the card not in use' do
+        subject.touch_in
+        subject.touch_out
+        expect(subject.in_journey).to eq false
+      end
+
+      it 'deducts the minimum fare from the card' do
+        subject.touch_in
+        expect{ subject.touch_out }.to change {subject.balance }.by -1
+      end
+
+
+
     end
 
   end
-
-
 
 end
