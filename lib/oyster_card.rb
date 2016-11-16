@@ -9,6 +9,10 @@ attr_reader :balance, :in_journey
     @in_journey = false
   end
 
+  def in_journey?
+    @in_journey
+  end
+
   def top_up(amount)
     fail "Card cannot be loaded over £#{MAXIMUM_BALANCE}." if maximum_balance?(amount)
     @balance += amount
@@ -20,6 +24,10 @@ attr_reader :balance, :in_journey
 
   def touch_in
     @in_journey = true
+  end
+
+  def touch_out
+    @in_journey = false
   end
 
   private

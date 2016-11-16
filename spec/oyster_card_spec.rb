@@ -37,4 +37,23 @@ subject(:oyster) { described_class.new }
         expect(oyster.in_journey).to be true
       end
     end
+
+    context "in_journey?" do
+      it 'should show whether in_journey?' do
+      expect(oyster.in_journey?).to be false
+    end
+      it 'should show true when in_journey? after touching in' do
+      oyster.touch_in
+      expect(oyster.in_journey?).to be true
+    end
+  end
+
+    context "touch_out" do
+      it 'should show false when in_journey? after touching out' do
+      oyster.touch_in
+      oyster.touch_out
+      expect(oyster.in_journey?).to be false
+    end
+  end
+
   end
