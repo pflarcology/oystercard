@@ -15,7 +15,7 @@ subject(:oyster) { described_class.new }
         expect(oyster.balance).to eq 10
       end
       it 'should have a maximum balance of £90' do
-        oyster.top_up(90)
+        oyster.top_up(described_class::MAXIMUM_BALANCE)
         expect{ oyster.top_up(1) }.to raise_error "Card cannot be loaded over £#{Oystercard::MAXIMUM_BALANCE}."
       end
       it 'should not be able to top up over £90' do
@@ -49,8 +49,12 @@ subject(:oyster) { described_class.new }
   end
 
     context "touch_out" do
+
+      before do
+        oyster.touch_in
+      end
+
       it 'should show false when in_journey? after touching out' do
-      oyster.touch_in
       oyster.touch_out
       expect(oyster.in_journey?).to be false
     end
