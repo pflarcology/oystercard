@@ -1,14 +1,17 @@
 require 'oyster_card'
 
 describe Oystercard do
-subject(:oyster) { described_class.new }
-let(:entry_station) { double :entry_station }
+  subject(:oyster) { described_class.new }
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
 
     context "new card" do
-    it 'should have a default balance' do
-      expect(oyster.balance).to eq 0
+      it 'should have a default balance' do
+        expect(oyster.balance).to eq 0
+      end
     end
-  end
+    
 
     context "topping up" do
 
@@ -28,13 +31,17 @@ let(:entry_station) { double :entry_station }
 
     end
 
+
     context "deducting fares" do
+
       it 'should deduct money from the card' do
         oyster.top_up(15)
         oyster.deduct(10)
         expect(oyster.balance).to eq 5
       end
+
     end
+
 
     context "touching in" do
 
@@ -56,34 +63,51 @@ let(:entry_station) { double :entry_station }
 
     end
 
-    context "in_journey?" do
-      it 'should show whether in_journey?' do
-      expect(oyster.in_journey?).to be false
-    end
-      it 'should show true when in_journey? after touching in' do
-      oyster.top_up(described_class::MAXIMUM_BALANCE)
-      oyster.touch_in(entry_station)
-      expect(oyster.in_journey?).to be true
-    end
-  end
 
-    context "touch_out" do
+    context "in_journey?" do
+
+      it 'should show whether in_journey?' do
+        expect(oyster.in_journey?).to be false
+      end
+
+      it 'should show true when in_journey? after touching in' do
+        oyster.top_up(described_class::MAXIMUM_BALANCE)
+        oyster.touch_in(entry_station)
+        expect(oyster.in_journey?).to be true
+      end
+
+    end
+
+
+    context "checks after a full journey" do
 
       before do
         oyster.top_up(described_class::MAXIMUM_BALANCE)
         oyster.touch_in(entry_station)
-        oyster.touch_out
+        oyster.touch_out(exit_station)
       end
 
       it 'should show false when in_journey? after touching out' do
-
-      expect(oyster.in_journey?).to be false
+        expect(oyster.in_journey?).to be false
       end
 
       it 'should return nil after touching out' do
-      expect(oyster.entry_station).to eq nil
+        expect(oyster.entry_station).to eq nil
       end
 
-  end
+      it 'should record one journey' do
+        expect(oyster.journeys).to include journey
+      end
 
-  end
+    end
+
+
+    context "#journeys" do
+
+      it 'should start off as an empty array' do
+        expect(oyster.journeys).to eq []
+      end
+
+    end
+
+end
