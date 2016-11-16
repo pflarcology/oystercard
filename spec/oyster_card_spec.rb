@@ -2,6 +2,7 @@ require 'oyster_card'
 
 describe Oystercard do
 subject(:oyster) { described_class.new }
+let(:entry_station) { double :entry_station }
 
     context "new card" do
     it 'should have a default balance' do
@@ -24,7 +25,7 @@ subject(:oyster) { described_class.new }
       it 'should not be able to top up over £90' do
         expect{ oyster.top_up(100) }.to raise_error "Card cannot be loaded over £#{described_class::MAXIMUM_BALANCE}."
       end
-      
+
     end
 
     context "deducting fares" do
@@ -39,12 +40,18 @@ subject(:oyster) { described_class.new }
 
       it 'should set in_journey to true' do
         oyster.top_up(described_class::MAXIMUM_BALANCE)
-        oyster.touch_in
-        expect(oyster.in_journey).to be true
+        oyster.touch_in(entry_station)
+        expect(oyster.in_journey?).to be true
       end
 
       it 'should raise an error when the balance is below the minimum' do
-        expect{ oyster.touch_in }.to raise_error "Card cannot be touched in: below £#{described_class::MINIMUM_BALANCE}"
+        expect{ oyster.touch_in(entry_station) }.to raise_error "Card cannot be touched in: below £#{described_class::MINIMUM_BALANCE}"
+      end
+
+      it 'should remember the entry station' do
+        oyster.top_up(described_class::MINIMUM_BALANCE)
+        oyster.touch_in(entry_station)
+        expect(oyster.entry_station).to eq entry_station
       end
 
     end
@@ -55,7 +62,7 @@ subject(:oyster) { described_class.new }
     end
       it 'should show true when in_journey? after touching in' do
       oyster.top_up(described_class::MAXIMUM_BALANCE)
-      oyster.touch_in
+      oyster.touch_in(entry_station)
       expect(oyster.in_journey?).to be true
     end
   end
@@ -64,13 +71,19 @@ subject(:oyster) { described_class.new }
 
       before do
         oyster.top_up(described_class::MAXIMUM_BALANCE)
-        oyster.touch_in
+        oyster.touch_in(entry_station)
+        oyster.touch_out
       end
 
       it 'should show false when in_journey? after touching out' do
-      oyster.touch_out
+
       expect(oyster.in_journey?).to be false
-    end
+      end
+
+      it 'should return nil after touching out' do
+      expect(oyster.entry_station).to eq nil
+      end
+
   end
 
   end
