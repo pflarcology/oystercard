@@ -11,7 +11,7 @@ describe Oystercard do
         expect(oyster.balance).to eq 0
       end
     end
-    
+
 
     context "topping up" do
 
@@ -45,39 +45,16 @@ describe Oystercard do
 
     context "touching in" do
 
-      it 'should set in_journey to true' do
-        oyster.top_up(described_class::MAXIMUM_BALANCE)
-        oyster.touch_in(entry_station)
-        expect(oyster.in_journey?).to be true
-      end
-
       it 'should raise an error when the balance is below the minimum' do
         expect{ oyster.touch_in(entry_station) }.to raise_error "Card cannot be touched in: below £#{described_class::MINIMUM_BALANCE}"
       end
 
-      it 'should remember the entry station' do
+      it 'should return the entry station' do
         oyster.top_up(described_class::MINIMUM_BALANCE)
-        oyster.touch_in(entry_station)
-        expect(oyster.entry_station).to eq entry_station
+        expect(oyster.touch_in(entry_station)).to eq entry_station
       end
 
     end
-
-
-    context "in_journey?" do
-
-      it 'should show whether in_journey?' do
-        expect(oyster.in_journey?).to be false
-      end
-
-      it 'should show true when in_journey? after touching in' do
-        oyster.top_up(described_class::MAXIMUM_BALANCE)
-        oyster.touch_in(entry_station)
-        expect(oyster.in_journey?).to be true
-      end
-
-    end
-
 
     context "checks after a full journey" do
 
@@ -87,27 +64,7 @@ describe Oystercard do
         oyster.touch_out(exit_station)
       end
 
-      it 'should show false when in_journey? after touching out' do
-        expect(oyster.in_journey?).to be false
-      end
-
-      it 'should return nil after touching out' do
-        expect(oyster.entry_station).to eq nil
-      end
-
-      it 'should record one journey' do
-        expect(oyster.journeys).to include journey
-      end
-
     end
 
-
-    context "#journeys" do
-
-      it 'should start off as an empty array' do
-        expect(oyster.journeys).to eq []
-      end
-
-    end
 
 end

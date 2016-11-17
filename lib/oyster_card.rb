@@ -27,10 +27,9 @@ attr_reader :balance, :journey
     @journey.entry_station = xyz
   end
 
-  def touch_out(abc)
-    @journey.exit_station = abc
-    @journey.journeys << { :entry_station =>  @journey.entry_station, :exit_station => @journey.exit_station }
-    @journey.entry_station = nil
+  def touch_out(exit_station)
+    @journey.journeys << { :entry_station =>  @journey.entry_station, :exit_station => exit_station }
+    @journey.finish(exit_station)
   end
 
   private
