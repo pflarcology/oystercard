@@ -1,4 +1,3 @@
-# hope this works
 
 require 'oyster_card'
 
@@ -49,11 +48,6 @@ describe Oystercard do
 
       it 'should raise an error when the balance is below the minimum' do
         expect{ oyster.touch_in(entry_station) }.to raise_error "Card cannot be touched in: below £#{described_class::MINIMUM_BALANCE}"
-      end
-
-      it 'should return the entry station' do
-        oyster.top_up(described_class::MINIMUM_BALANCE)
-        expect(oyster.touch_in(entry_station)).to eq entry_station
       end
 
     end

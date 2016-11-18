@@ -5,30 +5,30 @@ class Journey
 MIN_FARE = 1
 PENALTY_FARE = 6
 
-  attr_accessor :entry_station, :exit_station, :journeys
+attr_accessor :journey_hash
 
   def initialize
-    @entry_station
-    @journeys = []
+    @journey_hash = Hash.new
   end
 
-  def in_journey?
-    !!entry_station && !exit_station
-  end
+
 
   def fare
     complete? ?  MIN_FARE : PENALTY_FARE
   end
 
-  def complete?
-    !!entry_station && !!exit_station
+  def start_journey(entry_station)
+    @journey_hash[:start] = entry_station
   end
 
-  def finish(exit_station)
-    @exit_station = exit_station
+  def end_journey(exit_station)
+    @journey_hash[:end] = exit_station
   end
-# hope this works
-# hope this works
+
+
+
+
+
 
 
 end
