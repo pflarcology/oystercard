@@ -28,5 +28,7 @@ PENALTY_FARE = 6
     @exit_station = exit_station
   end
 # hope this works
+# hope this works
+
 
 end

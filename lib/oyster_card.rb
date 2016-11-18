@@ -41,5 +41,7 @@ attr_reader :balance, :journey
   def minimum_balance?
     balance < MINIMUM_BALANCE
   end
+  # hope this works
+
 
 end
