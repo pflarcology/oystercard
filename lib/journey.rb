@@ -27,6 +27,6 @@ PENALTY_FARE = 6
   def finish(exit_station)
     @exit_station = exit_station
   end
-
+# hope this works
 
 end
